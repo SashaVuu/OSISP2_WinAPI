@@ -1,0 +1,43 @@
+17952 Initialized system.
+19076 Thread been initialized.
+17952 Added task to a queue.
+21880 Thread been initialized.
+17952 Added task to a queue.
+17952 Added task to a queue.
+22876 Thread been initialized.
+22764 Manager was initialized.
+0  - amount of working threads
+17952 Added task to a queue.
+17952 Added task to a queue.
+22764 Manager choosed thread to execute new task
+0  - amount of working threads
+17952 Added task to a queue.
+22764 Manager choosed thread to execute new task
+1  - amount of working threads
+22764 Manager choosed thread to execute new task
+2  - amount of working threads
+22764 All threads are busy,waiting for free one...
+17952 1.Destructor started
+22876 Task was executed by this thread.
+22764 Manager choosed thread to execute new task
+2  - amount of working threads
+22764 Manager choosed thread to execute new task
+2  - amount of working threads
+22876 Task was executed by this thread.
+22764 Manager choosed thread to execute new task
+19076 Task was executed by this thread.
+22876 Task was executed by this thread.
+21880 Task was executed by this thread.
+22764 Manager procedure is over.
+17952 2.Manager Died
+19076 Unknown exception
+22876 Unknown exception
+21880 Unknown exception
+19076 Task was executed by this thread.
+22876 Task was executed by this thread.
+21880 Task was executed by this thread.
+19076 Thread procedure is over.
+22876 Thread procedure is over.
+21880 Thread procedure is over.
+17952 3.All threads Died
+17952 ThreadPool been destroyed.
