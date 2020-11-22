@@ -7,9 +7,8 @@
 class HashTable {
 private:
 
-	//Массив списков
-	List* ListsOfNodes[TABLE_SIZE];
-	int indexingType;// SURNAME?PHONE?STREET
+	List* ListsOfNodes[TABLE_SIZE]; //Массив списков
+	int indexingType;				//SURNAME?PHONE?STREET
 
 public:
 
@@ -24,5 +23,7 @@ public:
 	void Change(PhoneBookRecord* oldValue, PhoneBookRecord* newValue);
 
 	int HashFunc(std::string word);
+
+	int GetIndex(PhoneBookRecord* value);
 
 };

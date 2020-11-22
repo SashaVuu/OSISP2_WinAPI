@@ -32,3 +32,4 @@ std::vector<PhoneBookRecord*> LoadDB(string path);
 void CreateHashTablesByVector();
 void  WriteToFile();
 string pathToDB;
+CRITICAL_SECTION criticalSection;

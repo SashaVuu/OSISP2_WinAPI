@@ -24,7 +24,7 @@ public:
 	void Change(PhoneBookRecord* oldvalue, PhoneBookRecord* newvalue);
 	PhoneBookRecord* Find(string value);
 	vector<PhoneBookRecord*> ListToVector();
-
+	bool isIdenticalRecords(PhoneBookRecord* record1, PhoneBookRecord* record2);
 private:
 	Node* head;
 };

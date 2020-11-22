@@ -12,7 +12,8 @@
 #define COLUMN_WIDTH 90
 
 
-//BUTTONS
+//BUTTONS,COMBOBOX,LISTVIEW,EDITS
+
 #define WM_FIND_BUTTON 10000
 #define WM_DELETE_BUTTON 10001
 #define WM_REFRESH_BUTTON 10002
@@ -20,10 +21,8 @@
 #define WM_FILL_CHANGE_BUTTON 10004
 #define WM_ADD_BUTTON 10005
 
-
 #define WM_LISTVIEW 20000
 #define WM_COMBOBOX 20001
-
 
 #define WM_EDIT_1 30001
 #define WM_EDIT_2 30002
@@ -33,8 +32,6 @@
 #define WM_EDIT_6 30006
 #define WM_EDIT_7 30007
 #define WM_EDIT_8 30008
-
-
 
 
 //LibFunc
@@ -91,8 +88,6 @@ chng ChangeRecord = (chng)GetProcAddress(hmd, CHANGE_RECORD_FUNCTION);
 
 typedef void(*destroy)();
 destroy DestroyDB = (destroy)GetProcAddress(hmd, DESTROY_FUNCTION);
-
-
 
 const std::vector<LPCWSTR> colNames{
     L"Phone", 
@@ -357,14 +352,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case WM_FIND_BUTTON:
             {
-
                 //Считывание и преобразование текста с поля для ввода
-                LPWSTR lpwstr = strToLPWSTR("");
-                GetWindowText(MainInputEdit, lpwstr, -1);
 
-                char editBuff[50];
-                wcstombs(editBuff, lpwstr, 50);
-                std::string editStr = std::string(editBuff);
+                TCHAR* buf;
+                int len;
+                buf = (TCHAR*)malloc(len = ((GetWindowTextLength(MainInputEdit) + 1) * sizeof(TCHAR)));
+
+                if (buf != NULL)
+                {
+                    GetWindowText(MainInputEdit, buf, len);
+                }
+
+                char buffer[500];
+                wcstombs(buffer, buf, 255);
+
+
+                //Строка с edit
+                string editStr = string(buffer);
+
+                free(buf);
+
                 if (editStr.size() == 0)
                     break;
 
@@ -374,9 +381,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 comboboxElem = strToLPWSTR("");
                 GetWindowText(ComboBox, comboboxElem, 15);
 
-                if (lstrcmpW((LPCWSTR)comboboxElem, L"Phone") == 0) {records = getRecordByValue(editStr, BY_PHONENUM);}
-                if (lstrcmpW((LPCWSTR)comboboxElem, L"Street") == 0) {records = getRecordByValue(editStr, BY_STREET);}
-                if (lstrcmpW((LPCWSTR)comboboxElem, L"Surname") == 0) {records = getRecordByValue(editStr, BY_SURNAME);}
+                if (lstrcmpW((LPCWSTR)comboboxElem, L"Phone") == 0) { records = getRecordByValue(editStr, BY_PHONENUM); }
+                if (lstrcmpW((LPCWSTR)comboboxElem, L"Street") == 0) { records = getRecordByValue(editStr, BY_STREET); }
+                if (lstrcmpW((LPCWSTR)comboboxElem, L"Surname") == 0) { records = getRecordByValue(editStr, BY_SURNAME); }
 
                 FillListView(ListView, records);
                 break;
@@ -384,6 +391,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case WM_ADD_BUTTON:
             {
+                //Считывание с edits, формирование и добавление записи 
                 vector<string> fields;
                 bool isParametersFilled=true;
                 for (int i = 0; i < 8; i++) {
@@ -436,7 +444,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
             case WM_DELETE_BUTTON:
             {
-                //***
+                //Удаление выбранной записи
+
                 int index = ListView_GetNextItem(ListView, -1, LVNI_SELECTED);
                 if (index == -1) {
                     MessageBox(hWnd, L"Choose record in list view", L"Error", MB_OK | MB_ICONINFORMATION);
@@ -454,7 +463,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
             case WM_CHANGE_BUTTON:
             {
-                //***Заполняем edits полями записи,вытащенной из таблицы
+                //Заполняем edits полями записи,вытащенной из таблицы
+
+
                 int index = ListView_GetNextItem(ListView, -1, LVNI_SELECTED);
                 if (index == -1) {
                     MessageBox(hWnd, L"Choose record in list view", L"Error", MB_OK | MB_ICONINFORMATION);
@@ -477,7 +488,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             case WM_FILL_CHANGE_BUTTON:
             {
-                //***После того как (не)изменили строки в edits, создаем запись и меняем ее с изначальной
+                //После того как (не)изменили строки в edits, создаем запись и меняем ее с изначальной
 
                 bool isParametersFilled = true;
                 vector<string> fields;
@@ -536,9 +547,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
                 break;
             }
+
             case WM_REFRESH_BUTTON:
             {
-                //***Выводим все записи в таблицу
+                //Выводим все записи в таблицу
+
                 vector<PhoneBookRecord*> records = getAllRecords();
                 FillListView(ListView, records);
                 break;
@@ -555,6 +568,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+
     //Отрисовываем все подписи
     case WM_PAINT:
         {
@@ -587,8 +601,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DESTROY:
+    {
+        DestroyDB();
         PostQuitMessage(0);
         break;
+    }
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -616,7 +633,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
-
+//------------------------------------------------------------------
 
 
 //Создаем колонки
@@ -672,6 +689,7 @@ LPWSTR strToLPWSTR(std::string s)
 
     return ptr;
 }
+
 
 PhoneBookRecord* getRecordFromListView(HWND hWnd,int index) {
 

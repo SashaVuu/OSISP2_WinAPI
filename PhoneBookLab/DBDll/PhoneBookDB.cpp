@@ -6,11 +6,14 @@
 //-Создает и заполняет хэш-таблицы 
 DATABASE_API void __cdecl CreateDB()
 {
+    InitializeCriticalSection(&criticalSection);
     surnameHashTable = new HashTable(BY_SURNAME);
     streetHashTable = new HashTable(BY_STREET);
     phoneHashTable = new HashTable(BY_PHONENUM);
     pathToDB = "..\\jija.txt";
+    EnterCriticalSection(&criticalSection);
     records = LoadDB(pathToDB);//читаем с файла и формируем вектор записей
+    LeaveCriticalSection(&criticalSection);
     CreateHashTablesByVector();
 }
 
@@ -18,7 +21,10 @@ DATABASE_API void __cdecl CreateDB()
 //-Записывает вектор записей в файл
 DATABASE_API void __cdecl DestroyDB()
 {
+    EnterCriticalSection(&criticalSection);
     WriteToFile();
+    LeaveCriticalSection(&criticalSection);
+    DeleteCriticalSection(&criticalSection);
 }
 
 //Добавление новой записи
@@ -35,7 +41,6 @@ DATABASE_API void __cdecl AddRecord(PhoneBookRecord* newRecord)
 //Запись в файл данных из вектора записей
 void  WriteToFile()
 {
-
     ofstream fout;
     fout.open(pathToDB);
     if (fout.is_open()) {
