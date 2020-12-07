@@ -198,8 +198,8 @@ string* getLineFromDataBlock()
     }
 
     string* str = NULL;
-    if (lineChar[i - 1] == ';') {
-        lineChar[i - 1] = '\0';
+    if (lineChar[i - 2] == ';') {
+        lineChar[i - 2] = '\0';
         str = new string(lineChar);
         offsetInDataBlock++;
     }
